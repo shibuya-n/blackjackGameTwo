@@ -106,7 +106,7 @@ public class BlackJack extends JFrame {
 
         //Reset Button
         JButton resetButton = new JButton("Reset Game");
-        reset.setFont(new Font("Courier New", Font.PLAIN, 16));
+        resetButton.setFont(new Font("Courier New", Font.PLAIN, 16));
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -119,7 +119,15 @@ public class BlackJack extends JFrame {
 
         //Panel to hold the Hit button so that it can be centered
         JPanel panelToHoldButton = new JPanel(); //For the cell the Hit will be in
+        panelToHoldButton.add(hitButton);
+        panelToHoldButton.add(stayButton);
+        panelToHoldButton.add(resetButton);
 
+        //*********
+
+        //Adding items to subpanel on desired order
+        coolerSubPanel.add(userScoreText);
+        coolerSubPanel.add()
     }
 
 
