@@ -21,6 +21,8 @@ public class BlackJack extends JFrame {
 
     JPanel dealerScoreAndCards = new JPanel();
 
+    int lastAce = 0;
+
     // Create panel to hold the card
     JPanel panelToEncapsulateCard = new JPanel();
 
@@ -76,9 +78,10 @@ public class BlackJack extends JFrame {
         //get a card image
 
         BufferedImage myPicture = null;
+        String randomCardName = "";
 
         try {
-            String randomCardName = getRandomCard();
+            randomCardName = getRandomCard();
             int valueOfRandomCard = getValue(randomCardName, user);
             String pathName = "src/PNG-cards-1.3/" + randomCardName;
 
@@ -100,7 +103,25 @@ public class BlackJack extends JFrame {
 
         //Create panel to hold the card
         JPanel panelToEncapsulateCard = new JPanel();
-        panelToEncapsulateCard.add(new JLabel(new ImageIcon(newimg)));
+
+        if (randomCardName.contains("ace")){
+
+            JLabel addAce = new JLabel(new ImageIcon(newimg));
+            addAce.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    acePanel();
+                    userScoreValue = userScoreValue - lastAce;
+                    userScoreText.setText("Total: " + userScoreValue);
+                }
+            });
+            panelToEncapsulateCard.add(addAce);
+
+
+        } else {
+            panelToEncapsulateCard.add(new JLabel(new ImageIcon(newimg)));
+        }
 
         //return panel
         return panelToEncapsulateCard;
@@ -390,6 +411,7 @@ public class BlackJack extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                lastAce = 1;
                 userScoreValue += 1;
                 userScoreText.setText("Total: " + userScoreValue);
 
@@ -408,11 +430,13 @@ public class BlackJack extends JFrame {
         elevenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lastAce = 11;
                 userScoreValue += 11;
                 userScoreText.setText("Total: " + userScoreValue);
 
                 acePopup.setVisible(false);
                 acePopup.dispose();
+
 
 
             }
