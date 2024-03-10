@@ -47,11 +47,13 @@ public class BlackJack extends JFrame {
 
     //returns integer value for string card. for aces, 1 is chosen if sum is over 21
 
-    public int getValue(String someCard){
+    public int getValue(String someCard, String user){
         if(someCard.contains("jack") || someCard.contains("queen") || someCard.contains("king")){
             return 10;
-        } else if (someCard.contains("ace")){
-            return (userScoreValue + 11) > 21 ? 1 : 11;
+        } else if (user.equals("player") && someCard.contains("ace")) {
+           return acePanel();
+        } else if (user.equals("dealer") && someCard.contains("ace")){
+            return (11) > 21 ? 1 : 11;
         } else {
             return parseStringForValue(someCard);
         }
@@ -77,7 +79,7 @@ public class BlackJack extends JFrame {
 
         try {
             String randomCardName = getRandomCard();
-            int valueOfRandomCard = getValue(randomCardName);
+            int valueOfRandomCard = getValue(randomCardName, user);
             String pathName = "src/PNG-cards-1.3/" + randomCardName;
 
             myPicture = ImageIO.read(new File(pathName));
@@ -129,7 +131,7 @@ public class BlackJack extends JFrame {
 
                 }
                 else {
-                    boolean win = false;
+                    String win = "false";
                     windowPopup(win, outer);
 
 
@@ -147,7 +149,7 @@ public class BlackJack extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                boolean win = false;
+                String win = "false";
                 dealerScoreAndCards.remove(panelToEncapsulateCard);
 
                 dealerScoreAndCards.add(rollImage("dealer"));
@@ -155,12 +157,20 @@ public class BlackJack extends JFrame {
                 while (dealerScoreValue < 17){
                     dealerScoreAndCards.add(rollImage("dealer"));
                 }
-                if (dealerScoreValue > userScoreValue){
-                    win = false;
+                if (dealerScoreValue > 21){
+                    win = "true";
+                    windowPopup(win, outer);
+                }
+                else if ((dealerScoreValue == userScoreValue)) {
+                    win = "draw";
+                    windowPopup(win, outer);
+                }
+                else if (dealerScoreValue > userScoreValue){
+                    win = "false";
                     windowPopup(win, outer);
                 }
                 else {
-                    win = true;
+                    win = "true";
                     windowPopup(win, outer);
                 }
             }
@@ -243,7 +253,7 @@ public class BlackJack extends JFrame {
         return window;
     }
 
-    public void windowPopup(boolean win, JFrame window){
+    public void windowPopup(String win, JFrame window){
         JFrame winLose = new JFrame();
         winLose.setLayout(new GridLayout(3,1));
 
@@ -260,9 +270,12 @@ public class BlackJack extends JFrame {
         playAgain.setText(" PLAY AGAIN? ");
         playCase.add(playAgain);
 
-        if (win){
+        if (win.equals("true")){
             message.setText(" YOU WIN ");
 
+        }
+        else if (win.equals("draw")){
+            message.setText(" DRAW! ");
         }
         else {
             message.setText(" YOU LOST ");
@@ -327,6 +340,8 @@ public class BlackJack extends JFrame {
                 window.setVisible(false);
                 window.dispose();
 
+                System.exit(0);
+
 
             }
         });
@@ -343,6 +358,84 @@ public class BlackJack extends JFrame {
         winLose.setVisible(true);
         winLose.setBounds(0,0, 500, 500);
     }
+
+    public int acePanel(){
+
+
+
+
+        JFrame acePopup = new JFrame();
+
+        acePopup.setLayout(new GridLayout(2,1));
+
+
+
+        JPanel display = new JPanel();
+        display.setLayout(new FlowLayout());
+
+        JLabel userQuestion = new JLabel();
+        userQuestion.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        userQuestion.setText(" SET ACE AS 1 OR 11? ");
+        display.add(userQuestion);
+
+
+        JPanel choiceGUI = new JPanel();
+        choiceGUI.setLayout(new GridLayout(1, 2));
+
+        JPanel buttonCase1 = new JPanel();
+        buttonCase1.setLayout(new FlowLayout());
+        JButton oneButton = new JButton("1");
+        oneButton.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        oneButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                userScoreValue += 1;
+                userScoreText.setText("Total: " + userScoreValue);
+
+                acePopup.setVisible(false);
+                acePopup.dispose();
+
+            }
+        });
+
+        buttonCase1.add(oneButton);
+
+        JPanel buttonCase2 = new JPanel();
+        buttonCase2.setLayout(new FlowLayout());
+        JButton elevenButton = new JButton("11");
+        elevenButton.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        elevenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                userScoreValue += 11;
+                userScoreText.setText("Total: " + userScoreValue);
+
+                acePopup.setVisible(false);
+                acePopup.dispose();
+
+
+            }
+        });
+
+        buttonCase2.add(elevenButton);
+
+        choiceGUI.add(buttonCase1);
+        choiceGUI.add(buttonCase2);
+
+
+        acePopup.add(display);
+        acePopup.add(choiceGUI);
+        acePopup.setVisible(true);
+        acePopup.setBounds(0,0, 500, 500);
+
+        return 0;
+
+
+
+    }
+
+
 
 
 }
