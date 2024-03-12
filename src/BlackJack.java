@@ -55,7 +55,12 @@ public class BlackJack extends JFrame {
         } else if (user.equals("player") && someCard.contains("ace")) {
            return acePanel();
         } else if (user.equals("dealer") && someCard.contains("ace")){
-            return (11) > 21 ? 1 : 11;
+            if ((dealerScoreValue + 11) > 21){
+                return 1;
+            }
+            else {
+                return 11; 
+            }
         } else {
             return parseStringForValue(someCard);
         }
@@ -137,6 +142,9 @@ public class BlackJack extends JFrame {
         JPanel panelToHoldCards = new JPanel();
         panelToHoldCards.setLayout(new FlowLayout());
 
+        panelToHoldCards.add(rollImage("player"));
+        panelToHoldCards.add(rollImage("player"));
+
 
 
 
@@ -203,10 +211,36 @@ public class BlackJack extends JFrame {
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelToHoldCards.removeAll();
-                userScoreValue = 0;
-                userScoreText.setText("Total: " + userScoreValue);
-                window.revalidate();
+              
+
+                outer.setVisible(false);
+                outer.dispose();
+
+                JFrame window = new JFrame("BLACKJACK");
+                window.setLayout(new GridLayout(2,1));
+
+                JPanel blackjackGUI = new JPanel();
+                blackjackGUI.setLayout(new FlowLayout());
+
+                JPanel dealerGUI = new JPanel();
+                dealerGUI.setLayout(new FlowLayout());
+
+
+                BlackJack game = new BlackJack();
+                BlackJack.loadDeck();
+                
+                
+                
+
+                game.makeBlackJackGUI(blackjackGUI, window);
+                game.makeDealerPortionOFBlackJackGUI(dealerGUI);
+
+
+
+                window.add(dealerGUI);
+                window.add(blackjackGUI);
+                window.setBounds(500,500,750,750);
+                window.setVisible(true);
             }
         });
 
@@ -296,7 +330,7 @@ public class BlackJack extends JFrame {
 
         }
         else if (win.equals("draw")){
-            message.setText(" DRAW! ");
+            message.setText(" PUSH! ");
         }
         else {
             message.setText(" YOU LOST ");
@@ -332,9 +366,11 @@ public class BlackJack extends JFrame {
 
 
                 BlackJack game = new BlackJack();
+                BlackJack.loadDeck();
 
                 game.makeBlackJackGUI(blackjackGUI, window);
                 game.makeDealerPortionOFBlackJackGUI(dealerGUI);
+
 
 
                 window.add(dealerGUI);

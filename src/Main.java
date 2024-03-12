@@ -20,6 +20,7 @@ public class Main {
         game.makeDealerPortionOFBlackJackGUI(dealerGUI);
 
 
+
         window.add(dealerGUI);
         window.add(blackjackGUI);
         window.setBounds(500,500,750,750);
